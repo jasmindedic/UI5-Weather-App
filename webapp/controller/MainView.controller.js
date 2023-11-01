@@ -1,11 +1,12 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel"
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel) {
+    function (Controller, JSONModel, Fragment) {
         "use strict";
 
         return Controller.extend("Zweatherapp.weatherapp.controller.MainView", {
@@ -19,6 +20,33 @@ sap.ui.define([
                 this.test(url);
                 /* Test */
             }, 
+
+            // Function to load fragment based on radioBtn selection
+            onSelect: function(event){
+                let selectedItem = event;
+                let selectedItemId = selectedItem.getParameters().id;
+
+                let testId = this.getRadioBtnTemp("temperatureBtn").getId();
+                console.log(testId);
+
+                if (selectedItemId == testId) {
+                    this.loadFragment({
+                        name: "Zweatherapp.weatherapp.view.temperature"
+                    }).then(function(myFragment) {
+                        /* let tempFragment = this.byId("fragmentTest"); */
+                        const tempFragment = this.byId("fragmentTest");
+                        tempFragment.removeAllItems(); 
+                        tempFragment.addItem(myFragment);
+                    }.bind(this));
+
+                    console.log("Test runs well!");
+                };
+            },
+
+            getRadioBtnTemp: function(id) {
+                let temperature = this.getView().byId(id);
+                return temperature;
+            },
 
             /* Test */
             test: function(url){
